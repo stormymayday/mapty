@@ -7,6 +7,7 @@ import Router from './services/Router.js';
 // Components:
 import RegistrationPage from './components/RegistrationPage.js';
 import LoginPage from './components/LoginPage.js';
+import HomePage from './components/HomePage.js';
 
 // Assets:
 import javascriptLogo from './javascript.svg';
