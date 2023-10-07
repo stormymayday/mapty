@@ -4,6 +4,9 @@ import './style.css';
 import State from './services/State.js';
 import Router from './services/Router.js';
 
+// Components:
+import LoginPage from './components/LoginPage.js';
+
 // Assets:
 import javascriptLogo from './javascript.svg';
 import viteLogo from '/vite.svg';

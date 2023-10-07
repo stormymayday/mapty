@@ -52,19 +52,28 @@ const Router = {
 
             case "/":
 
-                pageElement = document.createElement("home-page");
+                if (app.state.isLoggedIn === !false) {
 
-                break;
+                    pageElement = document.createElement("home-page");
 
-            case "/register":
+                    break;
 
-                pageElement = document.createElement("register-page");
+                } else {
+
+                    pageElement = document.createElement("login-page");
+
+                    break;
+                }
+
+            case "/registration":
+
+                pageElement = document.createElement("registration-page");
 
                 break;
 
             case "/login":
 
-                pageElement = document.createElement("register-page");
+                pageElement = document.createElement("login-page");
 
                 break;
 
