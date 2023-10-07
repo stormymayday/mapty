@@ -5,6 +5,7 @@ import State from './services/State.js';
 import Router from './services/Router.js';
 
 // Components:
+import RegistrationPage from './components/RegistrationPage.js';
 import LoginPage from './components/LoginPage.js';
 
 // Assets:
