@@ -27,11 +27,11 @@ const Router = {
 
         let pageElement = null;
 
+        const user = JSON.parse(localStorage.getItem('user'));
+
         switch (route) {
 
             case "/":
-
-                const user = JSON.parse(localStorage.getItem('user'));
 
                 if (user) {
 
