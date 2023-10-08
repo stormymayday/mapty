@@ -1,3 +1,5 @@
+import Router from "./Router.js";
+
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
 
@@ -53,7 +55,7 @@ export const userSignIn = async (email, password) => {
 
         // app.state.isLoggedIn = true;
 
-        // app.router.go(`/`);
+        Router.go(`/`);
 
     } catch (error) {
 
@@ -65,23 +67,30 @@ export const userSignIn = async (email, password) => {
 
 };
 
-export const checkAuthState = async () => {
+export const userSignOut = async () => {
+
+    await signOut(auth);
+
+    Router.go(`/login`);
+
+}
+
+export const isLoggedIn = async () => {
 
     onAuthStateChanged(auth, (user) => {
 
         if (user) {
 
-            // User is signed in, see docs for a list of available properties
-            // https://firebase.google.com/docs/reference/js/auth.user
+            console.log(user);
 
-            return user;
+            return true;
 
         } else {
 
-            // User is signed out
-            // ...
-
             return false;
+
         }
+
     });
-}
+
+};

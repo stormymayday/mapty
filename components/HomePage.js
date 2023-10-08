@@ -1,3 +1,5 @@
+import { userSignOut } from "../services/API.js";
+
 export default class HomePage extends HTMLElement {
 
     constructor() {
@@ -23,13 +25,17 @@ export default class HomePage extends HTMLElement {
 
         this.querySelector('h1').innerHTML = `Welcome ${user.email}`;
 
-        this.querySelector("#logout-btn").addEventListener("click", event => {
+        this.querySelector("#logout-btn").addEventListener("click", async (event) => {
+
+            // console.log(`hello`);
+
+            userSignOut();
 
             localStorage.clear();
 
             // app.state.isLoggedIn = false;
 
-            app.router.go(`/login`);
+            // app.router.go(`/login`);
 
         });
 

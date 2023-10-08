@@ -19,7 +19,7 @@ export default class LoginPage extends HTMLElement {
         // Appending content to the DOM
         this.appendChild(content);
 
-        this.querySelector("#login-btn").addEventListener("click", event => {
+        this.querySelector("#login-btn").addEventListener("click", async (event) => {
 
             event.preventDefault();
 
@@ -28,11 +28,11 @@ export default class LoginPage extends HTMLElement {
 
             userSignIn(email, password);
 
-            app.router.go(`/`);
+            // app.router.go(`/`);
 
         });
 
-        this.querySelector("#register-btn").addEventListener("click", event => {
+        this.querySelector("#register-btn").addEventListener("click", (event) => {
 
             app.router.go(`/registration`);
 
