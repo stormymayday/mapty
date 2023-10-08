@@ -1,5 +1,5 @@
 const State = {
-    isLoggedIn: false,
+    user: {},
 }
 
 // Creating a Proxy that would broadcast changes

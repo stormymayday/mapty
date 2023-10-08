@@ -1,3 +1,5 @@
+import { userSignIn } from "../services/API.js";
+
 export default class LoginPage extends HTMLElement {
 
     constructor() {
@@ -21,9 +23,10 @@ export default class LoginPage extends HTMLElement {
 
             event.preventDefault();
 
-            // console.log(this.querySelector('#email-input').value);
+            const email = document.querySelector('#email-input').value;
+            const password = document.querySelector('#password-input').value;
 
-            app.state.isLoggedIn = true;
+            userSignIn(email, password);
 
             app.router.go(`/`);
 

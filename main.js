@@ -24,8 +24,6 @@ app.state = State;
 // Making Router global 
 app.router = Router;
 
-console.log(import.meta.env.VITE_FIREBASE_API_KEY);
-
 window.addEventListener("DOMContentLoaded", async () => {
 
   // Initializing the Router

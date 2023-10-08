@@ -8,6 +8,8 @@ export default class HomePage extends HTMLElement {
 
     connectedCallback() {
 
+        // console.log(auth.currentUser);
+
         // Getting template from the DOM
         const template = document.getElementById('home-page-template');
 
@@ -17,9 +19,15 @@ export default class HomePage extends HTMLElement {
         // Appending content to the DOM
         this.appendChild(content);
 
+        const user = JSON.parse(localStorage.getItem('user'));
+
+        this.querySelector('h1').innerHTML = `Welcome ${user.email}`;
+
         this.querySelector("#logout-btn").addEventListener("click", event => {
 
-            app.state.isLoggedIn = false;
+            localStorage.clear();
+
+            // app.state.isLoggedIn = false;
 
             app.router.go(`/login`);
 

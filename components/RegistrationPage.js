@@ -1,4 +1,4 @@
-import { registerUser } from "../services/API.js";
+import { userRegistration } from "../services/API.js";
 
 export default class RegistrationPage extends HTMLElement {
 
@@ -26,7 +26,7 @@ export default class RegistrationPage extends HTMLElement {
             const email = document.querySelector('#email-input').value;
             const password = document.querySelector('#password-input').value;
 
-            registerUser(email, password);
+            userRegistration(email, password);
 
             // app.state.isLoggedIn = true;
 
@@ -39,6 +39,12 @@ export default class RegistrationPage extends HTMLElement {
             app.state.isLoggedIn = false;
 
             app.router.go(`/login`);
+
+        });
+
+        this.querySelector("#home-page-btn").addEventListener("click", event => {
+
+            app.router.go(`/`);
 
         });
 

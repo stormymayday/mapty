@@ -12,17 +12,19 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const firebaseApp = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 
-const firebaseAuth = getAuth(firebaseApp);
+const auth = getAuth(app);
 
-export const registerUser = async (email, password) => {
+export const userRegistration = async (email, password) => {
 
     try {
 
-        const registeredUser = await createUserWithEmailAndPassword(firebaseAuth, email, password);
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
-        console.log(registeredUser);
+        app.state.user = userCredential.user;
+
+        console.log(app);
 
         alert("Your account has been created!");
 
@@ -35,3 +37,51 @@ export const registerUser = async (email, password) => {
     }
 
 };
+
+export const userSignIn = async (email, password) => {
+
+    try {
+
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+
+        localStorage.setItem('user', JSON.stringify(userCredential.user));
+
+        // app.state.user = userCredential.user;
+        // console.log(app.state.user);
+        // console.log(app.state.user.uid);
+        // console.log(app.state.user.email);
+
+        // app.state.isLoggedIn = true;
+
+        // app.router.go(`/`);
+
+    } catch (error) {
+
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode + errorMessage);
+
+    }
+
+};
+
+export const checkAuthState = async () => {
+
+    onAuthStateChanged(auth, (user) => {
+
+        if (user) {
+
+            // User is signed in, see docs for a list of available properties
+            // https://firebase.google.com/docs/reference/js/auth.user
+
+            return user;
+
+        } else {
+
+            // User is signed out
+            // ...
+
+            return false;
+        }
+    });
+}
