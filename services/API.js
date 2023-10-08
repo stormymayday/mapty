@@ -12,7 +12,26 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-console.log(app);
+const firebaseApp = initializeApp(firebaseConfig);
 
-const auth = getAuth(app);
+const firebaseAuth = getAuth(firebaseApp);
+
+export const registerUser = async (email, password) => {
+
+    try {
+
+        const registeredUser = await createUserWithEmailAndPassword(firebaseAuth, email, password);
+
+        console.log(registeredUser);
+
+        alert("Your account has been created!");
+
+    } catch (error) {
+
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode + errorMessage);
+
+    }
+
+};
