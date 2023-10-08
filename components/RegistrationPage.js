@@ -1,4 +1,4 @@
-import { userRegistration } from "../services/API.js";
+import { registerWithEmailAndPassword } from "../services/API.js";
 
 export default class RegistrationPage extends HTMLElement {
 
@@ -19,14 +19,15 @@ export default class RegistrationPage extends HTMLElement {
         // Appending content to the DOM
         this.appendChild(content);
 
-        this.querySelector("#register-btn").addEventListener("click", event => {
+        this.querySelector("#registration-form").addEventListener("submit", event => {
 
             event.preventDefault();
 
             const email = document.querySelector('#email-input').value;
             const password = document.querySelector('#password-input').value;
+            const role = document.querySelector('#role-input').value;
 
-            userRegistration(email, password);
+            registerWithEmailAndPassword(email, password);
 
             // app.state.isLoggedIn = true;
 

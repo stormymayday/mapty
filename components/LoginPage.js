@@ -1,4 +1,4 @@
-import { userSignIn } from "../services/API.js";
+import { loginWithEmailAndPassword } from "../services/API.js";
 
 export default class LoginPage extends HTMLElement {
 
@@ -26,7 +26,7 @@ export default class LoginPage extends HTMLElement {
             const email = document.querySelector('#email-input').value;
             const password = document.querySelector('#password-input').value;
 
-            userSignIn(email, password);
+            loginWithEmailAndPassword(email, password);
 
             // app.router.go(`/`);
 

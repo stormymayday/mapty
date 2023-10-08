@@ -1,9 +1,9 @@
 import Router from "./Router.js";
 
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, AuthErrorCodes } from "firebase/auth";
 
-// Your web app's Firebase configuration
+// Firebase configuration
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
     authDomain: "mapty-534f3.firebaseapp.com",
@@ -13,47 +13,19 @@ const firebaseConfig = {
     appId: "1:1061200265983:web:a45f636a814d795fc902ca"
 };
 
-// Initialize Firebase
+// Initializing Firebase App
 const app = initializeApp(firebaseConfig);
 
+// Initializing Firebase Auth
 const auth = getAuth(app);
 
-export const userRegistration = async (email, password) => {
+export const registerWithEmailAndPassword = async (email, password) => {
 
     try {
 
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
-        app.state.user = userCredential.user;
-
-        console.log(app);
-
-        alert("Your account has been created!");
-
-    } catch (error) {
-
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode + errorMessage);
-
-    }
-
-};
-
-export const userSignIn = async (email, password) => {
-
-    try {
-
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-
         localStorage.setItem('user', JSON.stringify(userCredential.user));
-
-        // app.state.user = userCredential.user;
-        // console.log(app.state.user);
-        // console.log(app.state.user.uid);
-        // console.log(app.state.user.email);
-
-        // app.state.isLoggedIn = true;
 
         Router.go(`/`);
 
@@ -61,7 +33,64 @@ export const userSignIn = async (email, password) => {
 
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.log(errorCode + errorMessage);
+
+        console.log(errorCode);
+        console.log(errorMessage);
+
+        // Invalid Email
+        if (errorCode === 'auth/invalid-email' || errorMessage === 'Firebase: Error (auth/invalid-email).') {
+
+            document.querySelector("#message").innerHTML = `This email is invalid`;
+
+        }
+
+        // Weak Password
+        if (errorCode === 'auth/weak-password' || errorMessage === 'Firebase: Password should be at least 6 characters (auth/weak-password).') {
+
+            document.querySelector("#message").innerHTML = `Password should be at least 6 characters long`;
+
+        }
+
+        // Email Already In Use
+        if (errorCode === 'email-already-in-use' || errorMessage === 'Firebase: Error (auth/email-already-in-use).') {
+
+            document.querySelector("#message").innerHTML = `This email is already in use`;
+
+        }
+
+    }
+
+};
+
+export const loginWithEmailAndPassword = async (email, password) => {
+
+    document.querySelector("#message").innerHTML = ``;
+
+    try {
+
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+
+        localStorage.setItem('user', JSON.stringify(userCredential.user));
+
+        Router.go(`/`);
+
+    } catch (error) {
+
+        const errorCode = error.code;
+        const errorMessage = error.message;
+
+        console.log(errorCode);
+        console.log(errorMessage);
+
+        if (errorCode === 'auth/invalid-login-credentials' || errorMessage === 'Firebase: Error (auth/invalid-login-credentials).') {
+
+            document.querySelector("#message").innerHTML = `Invalid login credentials, please try again`;
+
+        } else {
+
+            document.querySelector("#message").innerHTML = `error message`;
+
+        }
 
     }
 
