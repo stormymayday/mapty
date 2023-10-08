@@ -19,6 +19,8 @@ export default class RegistrationPage extends HTMLElement {
 
         this.querySelector("#register-btn").addEventListener("click", event => {
 
+            event.preventDefault();
+
             app.state.isLoggedIn = true;
 
             app.router.go(`/`);

@@ -19,6 +19,10 @@ export default class LoginPage extends HTMLElement {
 
         this.querySelector("#login-btn").addEventListener("click", event => {
 
+            event.preventDefault();
+
+            // console.log(this.querySelector('#email-input').value);
+
             app.state.isLoggedIn = true;
 
             app.router.go(`/`);
