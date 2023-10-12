@@ -109,7 +109,7 @@ button:focus-visible {
 
 #create-post video,
 #create-post canvas {
-  width: 512px;
+  /* width: 512px; */
   max-width: 100%;
   display: none;
   margin: auto;
