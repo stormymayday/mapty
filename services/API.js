@@ -1,7 +1,9 @@
 import Router from "./Router.js";
 
 import { initializeApp } from "firebase/app";
+import { getFirestore, collection, addDoc } from "firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, AuthErrorCodes } from "firebase/auth";
+import { getStorage } from "firebase/storage";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -17,9 +19,17 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 // Initializing Firebase Auth
-const auth = getAuth(app);
+export const auth = getAuth(app);
 
-export const registerWithEmailAndPassword = async (email, password) => {
+// Initializing Firestore Database
+export const db = getFirestore(app);
+
+// Initializing Firebase Storage
+export const storage = getStorage(app);
+
+console.log(db);
+
+export const registerWithEmailAndPassword = async (email, password, role) => {
 
     try {
 

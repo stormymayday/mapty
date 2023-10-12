@@ -4,8 +4,6 @@ import './style.css';
 import State from './services/State.js';
 import Router from './services/Router.js';
 
-// import { firebaseApp, auth } from './services/API.js';
-
 // Components:
 import RegistrationPage from './components/RegistrationPage.js';
 import LoginPage from './components/LoginPage.js';

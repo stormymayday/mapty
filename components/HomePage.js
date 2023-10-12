@@ -1,4 +1,13 @@
-import { userSignOut } from "../services/API.js";
+import 'leaflet/dist/leaflet.css';
+import L from "leaflet";
+
+// import { userSignOut } from "../services/API.js";
+import Router from "../services/Router.js";
+import { auth, db, storage } from "../services/API.js";
+import { signOut } from "firebase/auth";
+import { ref, uploadBytes, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+
+const name = new Date().getTime();
 
 export default class HomePage extends HTMLElement {
 
@@ -8,9 +17,98 @@ export default class HomePage extends HTMLElement {
 
     }
 
+    async logOut() {
+
+        await signOut(auth);
+
+        Router.go(`/login`);
+
+    }
+
+    initializeMedia() {
+
+        // Custom Polyfills - Start
+        // Checking if there is no 'mediaDevices' in navigator
+        if (!('mediaDevices' in navigator)) {
+
+            console.log(`There are no Media Devices in the Navigator`);
+
+            // Creating mediaDevices object on navigator
+            navigator.mediaDevices = {};
+
+
+        }
+
+        // Checking if there is 'getUserMedia' property
+        if (!('getUserMedia' in navigator.mediaDevices)) {
+
+            console.log(`There is no 'getUserMedia' property`);
+
+            // Implementing our own getUserMedia function
+            navigator.mediaDevices.getUserMedia = function (constrains) {
+
+                // Binding Safari's OR Mozilla's implementation of getUserMedia 
+                let getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+
+                // Checking if getUserMedia is undefined
+                if (!getUserMedia) {
+                    return Promise.reject(new Error('getUserMedia is not implemented!'));
+                }
+
+                return new Promise(function (resolve, reject) {
+
+                    getUserMedia.call(navigator, constrains, resolve, reject);
+
+                });
+
+            }
+
+        }
+        // Custom Polyfills - End
+
+        // Getting access to the device camera
+        navigator.mediaDevices.getUserMedia({ video: true }).then(function (stream) {
+
+            // Access granted
+            // Outputting the stream
+            document.querySelector('#player').srcObject = stream;
+            document.querySelector('#player').style.display = 'block';
+
+        }).catch(function (error) {
+
+            // Access denied OR there is no media access
+            // Displaying image picker
+            document.querySelector('#pick-image').style.display = 'block';
+
+        });
+
+    }
+    // End of initializeMedia method
+
+    // This method converts a base64 url into a BLOB
+    base64toBLOB(dataURI) {
+
+        let byteString = atob(dataURI.split(',')[1]);
+
+        let mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+        let ab = new ArrayBuffer(byteString.length);
+
+        let ia = new Uint8Array(ab);
+
+        for (var i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+
+        let blob = new Blob([ab], { type: mimeString });
+
+        return blob;
+    }
+    // End of dataURItoBlob method
+
     connectedCallback() {
 
-        // console.log(auth.currentUser);
+        console.log(name);
 
         // Getting template from the DOM
         const template = document.getElementById('home-page-template');
@@ -23,19 +121,144 @@ export default class HomePage extends HTMLElement {
 
         const user = JSON.parse(localStorage.getItem('user'));
 
-        this.querySelector('h1').innerHTML = `Welcome ${user.email}`;
+        if (user) {
+
+            this.querySelector('h1').innerHTML = `Welcome ${user.email}`;
+
+            // Testing if navigator.geolocation is supported by the browser
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((position) => {
+
+                    // Succuss Callback Code:
+
+                    // Destructuring latitude and longitude from position.coords object
+                    const { latitude } = position.coords;
+                    const { longitude } = position.coords;
+                    const coordinates = [latitude, longitude];
+
+                    // Leaflet Code - Start
+                    // Rendering map centered on a current user location (coordinates) with max zoom-in setting
+                    const map = L.map('map').setView(coordinates, 18);
+
+                    // Tilelayer
+                    L.tileLayer('https://tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    }).addTo(map);
+
+                    // Displaying a Marker with current user coordinates
+                    L.marker(coordinates).addTo(map)
+                        .bindPopup(
+                            L.popup({
+                                autoClose: false,
+                                closeOnClick: false,
+                                className: 'running-popup',
+                            })
+                        )
+                        .setPopupContent('You are currently here')
+                        .openPopup();
+
+                    // Variable for tracking user clicks on the map
+                    let clickMarker = {};
+
+                    // Adding 'click' eventListener to the map 
+                    map.on('click', (mapEvent) => {
+
+                        // Destructuring latitude and longitude from mapEvent.latlng object
+                        const { lat, lng } = mapEvent.latlng;
+
+                        // Checking if clickMarker already on the map
+                        if (clickMarker != undefined) {
+
+                            // Removing clickMarker from the map
+                            map.removeLayer(clickMarker);
+
+                        }
+
+                        //Adding clickMarker to the map
+                        clickMarker = L.marker([lat, lng]).addTo(map)
+                            .bindPopup(
+                                L.popup({
+                                    autoClose: false,
+                                    closeOnClick: false,
+                                    className: 'running-popup',
+                                })
+                            )
+                            .setPopupContent('Incident location')
+                            .openPopup();
+
+                        console.log(`User clicked on ${lat} ${lng} coordinates`);
+
+                    });
+
+                    // Leaflet Code - End
+
+                }, () => {
+
+                    // Error Callback Code:
+
+                    alert(`Unfortunately, TowTackle was not able to pick up your position.`);
+
+                });
+
+            }
+            // end of navigator / Leaflet
+
+            // Image Capture - Start
+            let videoPlayer = this.querySelector('#player');
+            let canvasElement = this.querySelector('#canvas');
+            let captureBtn = this.querySelector('#capture-btn');
+            let imagePicker = this.querySelector('#image-picker');
+            let imagePickerDiv = this.querySelector('#pick-image');
+            let picture;
+
+            this.initializeMedia();
+
+            captureBtn.addEventListener('click', (event) => {
+
+                // Showing the canvas
+                canvasElement.style.display = 'block';
+
+                // Hiding the video player
+                videoPlayer.style.display = 'none';
+
+                // Hiding the capture button
+                captureBtn.style.display = 'none';
+
+                // Creating context for the canvas
+                const context = canvasElement.getContext('2d');
+
+                // Drawing image on the canvas
+                context.drawImage(videoPlayer, 0, 0, canvas.width, videoPlayer.videoHeight / (videoPlayer.videoWidth / canvas.width));
+
+                // Stopping the video stream
+                videoPlayer.srcObject.getVideoTracks().forEach((track) => {
+
+                    track.stop();
+
+                });
+
+                // Converting canvasElement into a BLOB
+                picture = this.base64toBLOB(canvasElement.toDataURL());
+
+                console.log(picture);
+
+                const storageRef = ref(storage, `${name}`);
+
+                // 'file' comes from the Blob or File API
+                uploadBytes(storageRef, picture).then((snapshot) => {
+                    console.log('Uploaded a blob or file!');
+                });
+
+            });
+            // Image Capture - End
+
+        }
 
         this.querySelector("#logout-btn").addEventListener("click", async (event) => {
 
-            // console.log(`hello`);
-
-            userSignOut();
+            await this.logOut();
 
             localStorage.clear();
-
-            // app.state.isLoggedIn = false;
-
-            // app.router.go(`/login`);
 
         });
 

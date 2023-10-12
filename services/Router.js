@@ -47,7 +47,6 @@ const Router = {
 
                 }
 
-
             case "/registration":
 
                 pageElement = document.createElement("registration-page");
