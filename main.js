@@ -1,4 +1,4 @@
-import './style.css';
+import './style.scss';
 
 // Services:
 import State from './services/State.js';
