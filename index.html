@@ -41,7 +41,7 @@
 
   <template id="login-page-template">
     <h1>Login Page</h1>
-    <form id="login-form">
+    <!-- <form id="login-form">
       <div>
         <label for="email-input">Your Email</label>
         <input id="email-input" name="email" type="email" required />
@@ -51,15 +51,46 @@
         <input id="password-input" name="password" type="password" required />
       </div>
       <div>
-        <button id="login-btn" type="submit">Login</button>
+        <button id="login-btn" class="btn btn-primary" type="submit">Login</button>
       </div>
-    </form>
+    </form> -->
+
+    <div class="login">
+      <form>
+        <input type="email" placeholder="email">
+        <input type="password" placeholder="password">
+        <button type="submit">Login</button>
+        <span></span>
+      </form>
+    </div>
+
     <div id="message"></div>
-    <button id="register-btn">Registration Page</button>
+    <button id="register-btn" class="btn btn-secondary">Registration Page</button>
   </template>
 
-  <template id="home-page-template">
-    <h1>Home Page</h1>
+  <template id="reporter-dashboard-page-template">
+    <h1>Reporter Dashboard</h1>
+    <h2></h2>
+    <h3></h3>
+    <button id="logout-btn">Logout</button>
+    <main>
+      <button id="create-case-btn">Create Case</button>
+    </main>
+  </template>
+
+  <template id="driver-dashboard-page-template">
+    <h1>Driver Dashboard Page</h1>
+    <h2></h2>
+    <h3></h3>
+    <button id="logout-btn">Logout</button>
+    <main>
+      <div id="map"></div>
+    </main>
+  </template>
+
+  <template id="create-case-page-template">
+    <h1>Create Case</h1>
+    <button id="back-btn">Back</button>
     <button id="logout-btn">Logout</button>
     <main>
 
@@ -83,6 +114,7 @@
         </div>
         <!-- File Picker - End -->
 
+        <button id="submit-btn">Submit</button>
       </div>
       <!-- create-post - end -->
 

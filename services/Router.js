@@ -28,18 +28,27 @@ const Router = {
         let pageElement = null;
 
         const user = JSON.parse(localStorage.getItem('user'));
+        const userID = JSON.parse(localStorage.getItem('userID'));
+        const userRole = JSON.parse(localStorage.getItem('userRole'));
 
         switch (route) {
 
             case "/":
 
-                if (user) {
+                if (userID && userRole === 'reporter') {
 
-                    pageElement = document.createElement("home-page");
+                    pageElement = document.createElement("reporter-dashboard-page");
 
                     break;
 
-                } else {
+                } else if (userID && userRole === 'driver') {
+
+                    pageElement = document.createElement("driver-dashboard-page");
+
+                    break;
+
+                }
+                else {
 
                     pageElement = document.createElement("login-page");
 
@@ -47,17 +56,60 @@ const Router = {
 
                 }
 
+            case "/create-case":
+
+                if (userID && userRole === 'reporter') {
+
+                    pageElement = document.createElement("create-case-page");
+
+                    break;
+                }
+
             case "/registration":
 
-                pageElement = document.createElement("registration-page");
+                if (userID && userRole === 'reporter') {
 
-                break;
+                    pageElement = document.createElement("reporter-dashboard-page");
+
+                    break;
+
+                } else if (userID && userRole === 'driver') {
+
+                    pageElement = document.createElement("driver-dashboard-page");
+
+                    break;
+
+                }
+                else {
+
+                    pageElement = document.createElement("registration-page");
+
+                    break;
+
+                }
 
             case "/login":
 
-                pageElement = document.createElement("login-page");
+                if (userID && userRole === 'reporter') {
 
-                break;
+                    pageElement = document.createElement("reporter-dashboard-page");
+
+                    break;
+
+                } else if (userID && userRole === 'driver') {
+
+                    pageElement = document.createElement("driver-dashboard-page");
+
+                    break;
+
+                }
+                else {
+
+                    pageElement = document.createElement("login-page");
+
+                    break;
+
+                }
 
             // default:
 

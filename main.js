@@ -7,7 +7,9 @@ import Router from './services/Router.js';
 // Components:
 import RegistrationPage from './components/RegistrationPage.js';
 import LoginPage from './components/LoginPage.js';
-import HomePage from './components/HomePage.js';
+import CreateCasePage from './components/CreateCasePage.js';
+import ReporterDashboardPage from './components/ReporterDashboardPage.js';
+import DriverDashboardPage from './components/DriverDashboardPage.js';
 
 // Assets:
 import javascriptLogo from './javascript.svg';

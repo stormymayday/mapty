@@ -1,19 +1,22 @@
 import 'leaflet/dist/leaflet.css';
 import L from "leaflet";
 
-// import { userSignOut } from "../services/API.js";
 import Router from "../services/Router.js";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { auth, db, storage } from "../services/API.js";
 import { signOut } from "firebase/auth";
 import { ref, uploadBytes, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 
-const name = new Date().getTime();
-
-export default class HomePage extends HTMLElement {
+export default class CreateCasePage extends HTMLElement {
 
     constructor() {
 
         super();
+
+        // Used for image name
+        this.name = new Date().getTime();
+        this.latitude;
+        this.longitude;
 
     }
 
@@ -22,6 +25,30 @@ export default class HomePage extends HTMLElement {
         await signOut(auth);
 
         Router.go(`/login`);
+
+    }
+
+    createCase = async (e) => {
+
+        // e.preventDefault();
+
+        const user = JSON.parse(localStorage.getItem('user'));
+
+        await addDoc(collection(db, "cases"), {
+            creationTime: serverTimestamp(),
+            completionTime: '',
+            reporterId: user.uid,
+            driverID: '',
+            coordinates: {
+                latitude: this.latitude,
+                longitude: this.longitude,
+            },
+            address: '',
+            image: '',
+            status: 'active',
+            notes: '',
+
+        });
 
     }
 
@@ -99,6 +126,20 @@ export default class HomePage extends HTMLElement {
     }
     // End of initializeMedia method
 
+    stopMedia() {
+
+        let videoPlayer = this.querySelector('#player');
+
+        // Stopping the video stream
+        videoPlayer.srcObject.getVideoTracks().forEach((track) => {
+
+            track.stop();
+
+        });
+
+    }
+    // End of stopMedia method
+
     // This method converts a base64 url into a BLOB
     base64toBLOB(dataURI) {
 
@@ -122,10 +163,10 @@ export default class HomePage extends HTMLElement {
 
     connectedCallback() {
 
-        console.log(name);
+        // console.log(name);
 
         // Getting template from the DOM
-        const template = document.getElementById('home-page-template');
+        const template = document.getElementById('create-case-page-template');
 
         // Cloning the template
         const content = template.content.cloneNode(true);
@@ -179,6 +220,9 @@ export default class HomePage extends HTMLElement {
 
                         // Destructuring latitude and longitude from mapEvent.latlng object
                         const { lat, lng } = mapEvent.latlng;
+
+                        this.latitude = lat;
+                        this.longitude = lng;
 
                         // Checking if clickMarker already on the map
                         if (clickMarker != undefined) {
@@ -256,7 +300,7 @@ export default class HomePage extends HTMLElement {
 
                 console.log(picture);
 
-                const storageRef = ref(storage, `${name}`);
+                const storageRef = ref(storage, `${this.name}`);
 
                 // 'file' comes from the Blob or File API
                 uploadBytes(storageRef, picture).then((snapshot) => {
@@ -268,11 +312,32 @@ export default class HomePage extends HTMLElement {
 
         }
 
+        this.querySelector("#back-btn").addEventListener("click", async (event) => {
+
+            // Stopping the video stream
+            this.stopMedia();
+
+            Router.go(`/`);
+
+        });
+
+        this.querySelector("#submit-btn").addEventListener("click", async (event) => {
+
+            // Stopping the video stream
+            this.stopMedia();
+
+            this.createCase();
+
+        });
+
         this.querySelector("#logout-btn").addEventListener("click", async (event) => {
 
-            await this.logOut();
+            // Stopping the video stream
+            this.stopMedia();
 
             localStorage.clear();
+
+            await this.logOut();
 
         });
 
@@ -280,4 +345,4 @@ export default class HomePage extends HTMLElement {
 
 }
 
-customElements.define("home-page", HomePage);
+customElements.define("create-case-page", CreateCasePage);
