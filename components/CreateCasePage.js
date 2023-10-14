@@ -5,7 +5,7 @@ import Router from "../services/Router.js";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { auth, db, storage } from "../services/API.js";
 import { signOut } from "firebase/auth";
-import { ref, uploadBytes, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 export default class CreateCasePage extends HTMLElement {
 
@@ -15,6 +15,7 @@ export default class CreateCasePage extends HTMLElement {
 
         // Used for image name
         this.name = new Date().getTime();
+        this.downloadURL;
         this.latitude;
         this.longitude;
 
@@ -34,21 +35,30 @@ export default class CreateCasePage extends HTMLElement {
 
         const user = JSON.parse(localStorage.getItem('user'));
 
-        await addDoc(collection(db, "cases"), {
-            creationTime: serverTimestamp(),
-            completionTime: '',
-            reporterId: user.uid,
-            driverID: '',
-            coordinates: {
-                latitude: this.latitude,
-                longitude: this.longitude,
-            },
-            address: '',
-            image: '',
-            status: 'active',
-            notes: '',
+        try {
 
-        });
+            const response = await addDoc(collection(db, "cases"), {
+
+                creationTime: serverTimestamp(),
+                completionTime: '',
+                reporterId: user.uid,
+                driverID: '',
+                coordinates: {
+                    latitude: this.latitude,
+                    longitude: this.longitude,
+                },
+                address: '',
+                image: this.downloadURL,
+                status: 'active',
+                notes: '',
+
+            });
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
 
     }
 
@@ -304,7 +314,14 @@ export default class CreateCasePage extends HTMLElement {
 
                 // 'file' comes from the Blob or File API
                 uploadBytes(storageRef, picture).then((snapshot) => {
-                    console.log('Uploaded a blob or file!');
+
+                    getDownloadURL(snapshot.ref).then((downloadURL) => {
+
+                        this.downloadURL = downloadURL;
+
+                        console.log('File available at', downloadURL);
+                    });
+
                 });
 
             });
