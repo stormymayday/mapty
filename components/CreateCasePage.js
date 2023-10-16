@@ -40,7 +40,7 @@ export default class CreateCasePage extends HTMLElement {
             // Display the selected image (you can customize this part)
             const imageElement = document.createElement("img");
             imageElement.src = imageUrl;
-            this.querySelector("#img-container").appendChild(imageElement);
+            document.querySelector('#img-container').appendChild(imageElement);
 
             // You can also upload the image to a server or process it further.
         }
@@ -345,6 +345,12 @@ export default class CreateCasePage extends HTMLElement {
             // Image Capture - End
 
         }
+
+        this.querySelector("#camera-input").addEventListener("change", async (event) => {
+
+            this.handleFileInput(document.querySelector("#camera-input"));
+
+        });
 
         this.querySelector("#back-btn").addEventListener("click", async (event) => {
 
