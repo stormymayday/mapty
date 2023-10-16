@@ -40,6 +40,7 @@ export default class CreateCasePage extends HTMLElement {
             // Display the selected image (you can customize this part)
             const imageElement = document.createElement("img");
             imageElement.src = imageUrl;
+            imageElement.style.maxHeight = "300px";
             document.querySelector('#img-container').appendChild(imageElement);
 
             // You can also upload the image to a server or process it further.
