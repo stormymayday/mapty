@@ -44,6 +44,19 @@ export default class CreateCasePage extends HTMLElement {
             document.querySelector('#img-container').appendChild(imageElement);
 
             // You can also upload the image to a server or process it further.
+            const storageRef = ref(storage, `${this.name}`);
+
+            // 'file' comes from the Blob or File API
+            uploadBytes(storageRef, selectedFile).then((snapshot) => {
+
+                getDownloadURL(snapshot.ref).then((downloadURL) => {
+
+                    this.downloadURL = downloadURL;
+
+                    console.log('File available at', downloadURL);
+                });
+
+            });
         }
     }
 
