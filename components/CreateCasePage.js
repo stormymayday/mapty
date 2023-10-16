@@ -14,7 +14,7 @@ export default class CreateCasePage extends HTMLElement {
         super();
 
         // Used for image name
-        this.name = new Date().getTime();
+        this.name;
         this.downloadURL;
         this.latitude;
         this.longitude;
@@ -46,6 +46,8 @@ export default class CreateCasePage extends HTMLElement {
             imageElement.style.maxHeight = "300px";
             imgContainer.appendChild(imageElement);
 
+            this.name = new Date().getTime();
+
             // You can also upload the image to a server or process it further.
             const storageRef = ref(storage, `${this.name}`);
 
@@ -57,6 +59,7 @@ export default class CreateCasePage extends HTMLElement {
                     this.downloadURL = downloadURL;
 
                     console.log('File available at', downloadURL);
+
                 });
 
             });
