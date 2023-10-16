@@ -29,6 +29,23 @@ export default class CreateCasePage extends HTMLElement {
 
     }
 
+    handleFileInput(input) {
+
+        const selectedFile = input.files[0];
+
+        if (selectedFile) {
+
+            const imageUrl = URL.createObjectURL(selectedFile);
+
+            // Display the selected image (you can customize this part)
+            const imageElement = document.createElement("img");
+            imageElement.src = imageUrl;
+            this.querySelector("#img-container").appendChild(imageElement);
+
+            // You can also upload the image to a server or process it further.
+        }
+    }
+
     createCase = async (e) => {
 
         // e.preventDefault();
@@ -279,7 +296,7 @@ export default class CreateCasePage extends HTMLElement {
             let imagePickerDiv = this.querySelector('#pick-image');
             let picture;
 
-            this.initializeMedia();
+            // this.initializeMedia();
 
             captureBtn.addEventListener('click', (event) => {
 
