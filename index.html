@@ -82,12 +82,59 @@
   </template>
 
   <template id="driver-dashboard-page-template">
-    <h1>Driver Dashboard Page</h1>
-    <h2></h2>
-    <h3></h3>
-    <button id="logout-btn">Logout</button>
+    <header class="main-header">
+      <nav class="navbar">
+        <a href="#home">
+          <div class="logo">
+            <img src="./src/logo.svg" alt="logo">
+          </div>
+        </a>
+        <div class="dropdown">
+          <button class="dropbtn">
+            <div class="user">
+              <div class="avatar-container">
+                <img class="avatar" src="./src/avatar.jpg" />
+              </div>
+              <div class="user-info">
+                <div id="username"></div>
+                <div id="email"></div>
+              </div>
+            </div>
+            <i class="fa fa-caret-down"></i>
+          </button>
+          <div class="dropdown-content">
+            <a id="logout-btn">Logout</a>
+          </div>
+        </div>
+      </nav>
+    </header>
     <main>
       <div id="map"></div>
+      <div class="case-container">
+        <h3>Incidents</h3>
+        <ul>
+          <li>
+            <div class="incident">
+              <div class="img-container">
+                <img src="./src/car.jpg" alt="">
+              </div>
+              <div class="case-info">
+                <p>view incident</p>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="incident">
+              <div class="img-container">
+                <img src="./src/car.jpg" alt="">
+              </div>
+              <div class="case-info">
+                <p>view incident</p>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
     </main>
   </template>
 

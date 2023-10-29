@@ -30,6 +30,8 @@ export default class DriverDashboardPage extends HTMLElement {
             // Rendering map centered on a current user location (coordinates) with max zoom-in setting
             this.map = L.map('map').setView(coordinates, 18);
 
+            // var map = L.map('map', { dragging: !L.Browser.mobile, tap: !L.Browser.mobile });
+
             // Tilelayer
             L.tileLayer('https://tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -126,8 +128,10 @@ export default class DriverDashboardPage extends HTMLElement {
 
         if (user) {
 
-            this.querySelector('h2').innerHTML = `Welcome ${user.email}`;
-            this.querySelector('h3').innerHTML = `Welcome ${userRole}`;
+            console.log(user);
+
+            this.querySelector('#username').innerHTML = `${user.email}`;
+            this.querySelector('#email').innerHTML = `${userRole}`;
 
             // Testing if navigator.geolocation is supported by the browser
             if (navigator.geolocation) {
