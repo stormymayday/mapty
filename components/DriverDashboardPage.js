@@ -32,7 +32,7 @@ export default class DriverDashboardPage extends HTMLElement {
 
             // var map = L.map('map', { dragging: !L.Browser.mobile, tap: !L.Browser.mobile });
 
-            // Testing Tylelayer styles
+            // Testing Tyle layer styles
 
             // Tilelayer
             L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
