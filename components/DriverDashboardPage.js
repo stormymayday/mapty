@@ -45,8 +45,8 @@ export default class DriverDashboardPage extends HTMLElement {
                         closeOnClick: false,
                         className: 'running-popup',
                     })
-                )
-                .setPopupContent('You are currently here');
+                );
+            // .setPopupContent('You are currently here');
             // .openPopup();
 
             try {
