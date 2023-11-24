@@ -97,8 +97,8 @@ export default class DriverDashboardPage extends HTMLElement {
                         className: 'running-popup',
                     })
                 )
-                .setPopupContent(doc.data().notes)
-                .openPopup();
+                .setPopupContent(doc.data().notes);
+            // .openPopup();
 
         });
 
